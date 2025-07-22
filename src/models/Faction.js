@@ -6,7 +6,7 @@ const Faction = dbConnection.define("Faction", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    desciption: {
+    description: {
         type: DataTypes.STRING,
         allowNull: false,
     },

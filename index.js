@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 
 import enemyUnitRoutes from "./src/routes/enemyUnitRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
+import factionRoutes from "./src/routes/factionRoutes.js";
 import dbConnection from "./utils/database.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,7 +37,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(bodyParser.json());
-app.use(multer({ storage: fileStorage, fileFilter }).single("image"));
+app.use(multer({ storage: fileStorage, fileFilter }).single("image")); //image is the name property of the input field submitting the file
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use((req, res, next) => {
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
 
 app.use(enemyUnitRoutes);
 app.use("/admin", adminRoutes);
+app.use(factionRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
