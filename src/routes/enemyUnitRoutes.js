@@ -8,16 +8,18 @@ import {
     deleteEnemyUnit,
 } from "../controllers/enemyUnitController.js";
 
+import { isAuth } from "../middleware/isAuth.js";
+
 const router = express.Router();
 
 router.get("/enemy-units", getEnemyUnits);
 
 router.get("/enemy-unit/:id", getEnemyUnit);
 
-router.delete("/enemy-unit/:id", deleteEnemyUnit);
+router.delete("/enemy-unit/:id", isAuth, deleteEnemyUnit);
 
-router.post("/enemy-unit", createEnemyUnit);
+router.post("/enemy-unit", isAuth, createEnemyUnit);
 
-router.put("/enemy-unit/:id", updateEnemyUnit);
+router.put("/enemy-unit/:id", isAuth, updateEnemyUnit);
 
 export default router;

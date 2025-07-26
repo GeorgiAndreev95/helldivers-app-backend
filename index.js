@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import multer from "multer";
 import path from "path";
+import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
 import enemyUnitRoutes from "./src/routes/enemyUnitRoutes.js";
@@ -11,6 +12,7 @@ import dbConnection from "./utils/database.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,11 +44,18 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    );
     res.setHeader(
         "Access-Control-Allow-Headers",
         "Content-Type, Authorization"
     );
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204); // No content
+    }
     next();
 });
 

@@ -8,16 +8,18 @@ import {
     deleteFaction,
 } from "../controllers/factionController.js";
 
+import { isAuth } from "../middleware/isAuth.js";
+
 const router = express.Router();
 
 router.get("/factions", getFactions);
 
 router.get("/factions/:id", getFaction);
 
-router.post("/factions", createFaction);
+router.post("/factions", isAuth, createFaction);
 
-router.put("/factions/:id", updateFaction);
+router.put("/factions/:id", isAuth, updateFaction);
 
-router.delete("/factions/:id", deleteFaction);
+router.delete("/factions/:id", isAuth, deleteFaction);
 
 export default router;

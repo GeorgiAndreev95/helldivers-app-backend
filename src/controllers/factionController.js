@@ -29,6 +29,10 @@ export const createFaction = async (req, res, next) => {
             },
         });
     } catch (error) {
+        if (req.file) {
+            deleteFile(`/images/${req.file.filename}`);
+        }
+
         console.log(error);
         return res.status(500).json({ message: "Internal server error" });
     }
