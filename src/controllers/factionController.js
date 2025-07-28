@@ -115,9 +115,18 @@ export const deleteFaction = async (req, res, next) => {
             deleteFile(faction.image);
         }
 
+        const deletedFaction = {
+            id: faction.id,
+            name: faction.name,
+            image: faction.image,
+        };
+
         await faction.destroy();
 
-        res.status(200).json({ message: "Faction deleted" });
+        res.status(200).json({
+            message: "Faction deleted",
+            faction: deletedFaction,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to delete faction" });
