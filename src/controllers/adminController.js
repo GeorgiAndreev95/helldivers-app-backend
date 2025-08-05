@@ -61,6 +61,11 @@ export const loginAdmin = async (req, res, next) => {
 
     try {
         const admin = await Admin.findOne({ where: { email: email } });
+        if (!admin) {
+            return res
+                .status(404)
+                .json({ message: "Could not find a user with this email." });
+        }
         const isMatch = await bcrypt.compare(password, admin.password);
         if (!admin || !isMatch) {
             return res.status(401).json({

@@ -9,6 +9,9 @@ import enemyUnitRoutes from "./src/routes/enemyUnitRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 import factionRoutes from "./src/routes/factionRoutes.js";
 import dbConnection from "./utils/database.js";
+import Faction from "./src/models/Faction.js";
+import EnemyUnit from "./src/models/EnemyUnit.js";
+import Admin from "./src/models/Admin.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +65,13 @@ app.use((req, res, next) => {
 app.use(enemyUnitRoutes);
 app.use("/admin", adminRoutes);
 app.use(factionRoutes);
+
+Admin.hasMany(EnemyUnit);
+EnemyUnit.belongsTo(Admin);
+Admin.hasMany(Faction);
+Faction.belongsTo(Admin);
+Faction.hasMany(EnemyUnit);
+EnemyUnit.belongsTo(Faction);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
