@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import dbConnection from "../../utils/database.js";
 
-const Admin = dbConnection.define("Admin", {
+const User = dbConnection.define("User", {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -12,4 +12,4 @@ const Admin = dbConnection.define("Admin", {
     },
 });
 
-export default Admin;
+export default User;

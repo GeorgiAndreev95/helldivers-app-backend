@@ -1,8 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 
-import Admin from "../models/Admin.js";
-import { signupAdmin, loginAdmin } from "../controllers/adminController.js";
+import { signupUser, loginUser } from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -23,7 +22,7 @@ router.post(
                 return true;
             }),
     ],
-    signupAdmin
+    signupUser
 );
 
 router.post(
@@ -35,7 +34,7 @@ router.post(
             .isLength({ min: 6 })
             .withMessage("Please enter a valid password."),
     ],
-    loginAdmin
+    loginUser
 );
 
 export default router;

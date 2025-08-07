@@ -6,12 +6,12 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
 import enemyUnitRoutes from "./src/routes/enemyUnitRoutes.js";
-import adminRoutes from "./src/routes/adminRoutes.js";
+import adminRoutes from "./src/routes/userRoutes.js";
 import factionRoutes from "./src/routes/factionRoutes.js";
 import dbConnection from "./utils/database.js";
 import Faction from "./src/models/Faction.js";
 import EnemyUnit from "./src/models/EnemyUnit.js";
-import Admin from "./src/models/Admin.js";
+import User from "./src/models/User.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,10 +66,14 @@ app.use(enemyUnitRoutes);
 app.use("/admin", adminRoutes);
 app.use(factionRoutes);
 
-Admin.hasMany(EnemyUnit);
-EnemyUnit.belongsTo(Admin);
-Admin.hasMany(Faction);
-Faction.belongsTo(Admin);
+User.hasMany(EnemyUnit);
+EnemyUnit.belongsTo(User);
+User.hasMany(Faction, {
+    foreignKey: "userId",
+});
+Faction.belongsTo(User, {
+    foreignKey: "userId",
+});
 Faction.hasMany(EnemyUnit);
 EnemyUnit.belongsTo(Faction);
 

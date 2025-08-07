@@ -2,9 +2,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
-import Admin from "../models/Admin.js";
+import Admin from "../models/User.js";
 
-export const signupAdmin = async (req, res, next) => {
+export const signupUser = async (req, res, next) => {
     const { email, password, confirmPassword } = req.body;
     const errors = validationResult(req);
 
@@ -45,7 +45,7 @@ export const signupAdmin = async (req, res, next) => {
     }
 };
 
-export const loginAdmin = async (req, res, next) => {
+export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -64,19 +64,19 @@ export const loginAdmin = async (req, res, next) => {
         if (!admin) {
             return res
                 .status(404)
-                .json({ message: "Could not find a user with this email." });
+                .json({ message: "Incorrect username or password." });
         }
         const isMatch = await bcrypt.compare(password, admin.password);
         if (!admin || !isMatch) {
             return res.status(401).json({
-                message: "Wrong username or password.",
+                message: "Incorrect username or password.",
             });
         }
 
         const token = jwt.sign(
             { email: admin.email, id: admin.id },
-            process.env.JWT_SECRET,
-            { expiresIn: "12h" }
+            process.env.JWT_SECRET
+            // { expiresIn: "12h" }
         );
 
         return res.status(200).json({

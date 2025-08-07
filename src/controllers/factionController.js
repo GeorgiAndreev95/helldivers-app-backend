@@ -3,6 +3,7 @@ import deleteFile from "../../utils/file.js";
 
 export const createFaction = async (req, res, next) => {
     const { name, description } = req.body;
+    const userId = req.userId;
 
     try {
         if (!req.file) {
@@ -18,6 +19,7 @@ export const createFaction = async (req, res, next) => {
             name,
             description,
             image: imageUrl,
+            userId,
         });
 
         res.status(201).json({
