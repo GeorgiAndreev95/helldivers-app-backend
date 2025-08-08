@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
 import enemyUnitRoutes from "./src/routes/enemyUnitRoutes.js";
-import adminRoutes from "./src/routes/userRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
 import factionRoutes from "./src/routes/factionRoutes.js";
 import dbConnection from "./utils/database.js";
 import Faction from "./src/models/Faction.js";
@@ -63,7 +63,7 @@ app.use((req, res, next) => {
 });
 
 app.use(enemyUnitRoutes);
-app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
 app.use(factionRoutes);
 
 User.hasMany(EnemyUnit);

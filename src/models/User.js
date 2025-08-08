@@ -10,6 +10,11 @@ const User = dbConnection.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    role: {
+        type: DataTypes.ENUM("admin", "user"),
+        allowNull: false,
+        defaultValue: "user",
+    },
 });
 
 export default User;

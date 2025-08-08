@@ -2,13 +2,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
-import Admin from "../models/User.js";
+import User from "../models/User.js";
 
 export const signupUser = async (req, res, next) => {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password, confirmPassword, role } = req.body;
     const errors = validationResult(req);
 
-    const existingUser = await Admin.findOne({ where: { email: email } });
+    const existingUser = await User.findOne({ where: { email: email } });
 
     if (existingUser) {
         return res.status(400).json({
@@ -16,7 +16,7 @@ export const signupUser = async (req, res, next) => {
         });
     }
 
-    if (!errors.isEmpty) {
+    if (!errors.isEmpty()) {
         return res.status(422).json({
             message: "Validation failed.",
             errors: errors.array(),
@@ -31,13 +31,18 @@ export const signupUser = async (req, res, next) => {
     try {
         const hashedPw = await bcrypt.hash(password, 12);
 
-        await Admin.create({
+        const newUser = await User.create({
             email: email,
             password: hashedPw,
+            role: role || "user",
         });
 
         res.status(201).json({
-            message: "Admin created",
+            message: "User created",
+            user: {
+                email: newUser.email,
+                role: newUser.role,
+            },
         });
     } catch (error) {
         console.log(error);
@@ -48,42 +53,41 @@ export const signupUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
         return res.status(422).json({
             message: "Validation failed.",
             errors: errors.array(),
-            oldInput: {
-                email,
-                password,
-            },
         });
     }
 
     try {
-        const admin = await Admin.findOne({ where: { email: email } });
-        if (!admin) {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
             return res
                 .status(404)
                 .json({ message: "Incorrect username or password." });
         }
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!admin || !isMatch) {
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!user || !isMatch) {
             return res.status(401).json({
                 message: "Incorrect username or password.",
             });
         }
 
         const token = jwt.sign(
-            { email: admin.email, id: admin.id },
+            { email: user.email, id: user.id, role: user.role },
             process.env.JWT_SECRET
             // { expiresIn: "12h" }
         );
 
         return res.status(200).json({
-            admin: {
-                email: admin.email,
-                id: admin.id,
-                token: token,
+            user: {
+                email: user.email,
+                id: user.id,
+                role: user.role,
+                token,
             },
         });
     } catch (error) {
