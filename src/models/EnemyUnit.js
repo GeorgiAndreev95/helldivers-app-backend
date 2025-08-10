@@ -10,6 +10,14 @@ const EnemyUnit = dbConnection.define("EnemyUnit", {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    spawning: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    behavior: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
     health: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -23,6 +31,10 @@ const EnemyUnit = dbConnection.define("EnemyUnit", {
         allowNull: false,
     },
     armor: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    image: {
         type: DataTypes.STRING,
         allowNull: false,
     },

@@ -27,11 +27,21 @@ export const getEnemyUnits = async (req, res, next) => {
 
 export const createEnemyUnit = async (req, res, next) => {
     try {
-        const { name, description, health, damage, minimumDifficulty, armor } =
-            req.body;
+        const {
+            name,
+            description,
+            spawning,
+            behavior,
+            health,
+            damage,
+            minimumDifficulty,
+            armor,
+        } = req.body;
         const enemyUnit = await EnemyUnit.create({
             name,
             description,
+            spawning,
+            behavior,
             health,
             damage,
             minimumDifficulty,
