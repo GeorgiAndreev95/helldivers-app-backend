@@ -66,16 +66,24 @@ app.use(enemyUnitRoutes);
 app.use("/user", userRoutes);
 app.use(factionRoutes);
 
-User.hasMany(EnemyUnit);
-EnemyUnit.belongsTo(User);
+User.hasMany(EnemyUnit, {
+    foreignKey: "userId",
+});
+EnemyUnit.belongsTo(User, {
+    foreignKey: "userId",
+});
 User.hasMany(Faction, {
     foreignKey: "userId",
 });
 Faction.belongsTo(User, {
     foreignKey: "userId",
 });
-Faction.hasMany(EnemyUnit);
-EnemyUnit.belongsTo(Faction);
+Faction.hasMany(EnemyUnit, {
+    foreignKey: "factionId",
+});
+EnemyUnit.belongsTo(Faction, {
+    foreignKey: "factionId",
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

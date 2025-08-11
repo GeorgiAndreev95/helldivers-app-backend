@@ -1,4 +1,5 @@
 import EnemyUnit from "../models/EnemyUnit.js";
+import deleteFile from "../../utils/file.js";
 
 export const getEnemyUnit = async (req, res, next) => {
     try {
@@ -26,17 +27,28 @@ export const getEnemyUnits = async (req, res, next) => {
 };
 
 export const createEnemyUnit = async (req, res, next) => {
+    const {
+        name,
+        description,
+        spawning,
+        behavior,
+        health,
+        damage,
+        minimumDifficulty,
+        armor,
+        factionId,
+    } = req.body;
+    const userId = req.userId;
+
     try {
-        const {
-            name,
-            description,
-            spawning,
-            behavior,
-            health,
-            damage,
-            minimumDifficulty,
-            armor,
-        } = req.body;
+        if (!req.file) {
+            return res.status(400).json({
+                message: "Attached file is not an image.",
+            });
+        }
+
+        const imageUrl = `/images/${req.file.filename}`;
+
         const enemyUnit = await EnemyUnit.create({
             name,
             description,
@@ -46,12 +58,19 @@ export const createEnemyUnit = async (req, res, next) => {
             damage,
             minimumDifficulty,
             armor,
+            factionId,
+            image: imageUrl,
+            userId,
         });
         console.log(req.body);
         return res.status(201).json({
             enemyUnit,
         });
     } catch (error) {
+        if (req.file) {
+            deleteFile(`/images/${req.file.filename}`);
+        }
+
         console.log(error);
         return res.status(500).json({ message: "Internal server error" });
     }
