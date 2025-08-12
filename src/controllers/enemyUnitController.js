@@ -79,8 +79,17 @@ export const createEnemyUnit = async (req, res, next) => {
 export const updateEnemyUnit = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { name, description, health, damage, minimumDifficulty, armor } =
-            req.body;
+        const {
+            name,
+            description,
+            spawning,
+            behavior,
+            health,
+            damage,
+            minimumDifficulty,
+            armor,
+            factionId,
+        } = req.body;
 
         const enemyUnit = await EnemyUnit.findByPk(id);
 
@@ -88,14 +97,29 @@ export const updateEnemyUnit = async (req, res, next) => {
             return res.status(404).json({ message: "Enemy unit not found" });
         }
 
-        await enemyUnit.update({
+        const updates = {
             name,
             description,
+            spawning,
+            behavior,
             health,
             damage,
             minimumDifficulty,
             armor,
-        });
+            factionId,
+        };
+
+        if (req.file) {
+            const newImageUrl = `/images/${req.file.filename}`;
+
+            if (enemyUnit.image && enemyUnit.image !== newImageUrl) {
+                deleteFile(enemyUnit.image);
+            }
+
+            updates.image = newImageUrl;
+        }
+
+        await enemyUnit.update(updates);
 
         return res
             .status(200)
